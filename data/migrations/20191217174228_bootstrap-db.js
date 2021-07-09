@@ -15,6 +15,7 @@ exports.up = function (knex) {
         .inTable('roles')
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT')
+        .defaultTo(2)
     })
 }
 

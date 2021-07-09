@@ -6,7 +6,7 @@ const restricted = (req, res, next) => {
     if(!token) {
       res.status(401).json("Token required")
     } else {
-        jwt.verify(jwt, JWT_SECRET, (err, decoded) => {
+        jwt.verify(token, JWT_SECRET, (err, decoded) => {
           if(err) {
             res.status(401).json("Token invalid")
           } else {
@@ -39,17 +39,19 @@ const checkUsernameExists = (req, res, next) => {
 const validateRoleName = (req, res, next) => {
   const { role_name } = req.body
 
-  if(role_name) {
-    role_name.trim()
-    next()
-  } else if(!role_name || role_name.trim() === "") {
+ 
+ if(!role_name || role_name.trim() === "") {
       "student"
       next()
   } else if(role_name.trim() === "admin") {
       res.status(422).json("Role name can not be admin")
   } else if(role_name.trim().length > 32) {
       res.status(422).json("Role name can not be longer than 32 chars")
+  }  else {
+      role_name.trim()
+      next()
   }
+}
   /*
     If the role_name in the body is valid, set req.role_name to be the trimmed string and proceed.
 
@@ -68,11 +70,10 @@ const validateRoleName = (req, res, next) => {
       "message": "Role name can not be longer than 32 chars"
     }
   */
-}
 
 module.exports = {
   restricted,
   checkUsernameExists,
   validateRoleName,
-  only,
-}
+  only
+};
