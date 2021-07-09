@@ -27,17 +27,29 @@ const only = role_name => (req, res, next) => {
 
 
 const checkUsernameExists = (req, res, next) => {
-  /*
-    If the username in req.body does NOT exist in the database
-    status 401
-    {
-      "message": "Invalid credentials"
-    }
-  */
+  const { username } = req.body
+  if(username) {
+    next()
+  } else {
+    res.status(401).json("Invalid credentials")
+  }
 }
 
 
 const validateRoleName = (req, res, next) => {
+  const { role_name } = req.body
+
+  if(role_name) {
+    role_name.trim()
+    next()
+  } else if(!role_name || role_name.trim() === "") {
+      "student"
+      next()
+  } else if(role_name.trim() === "admin") {
+      res.status(422).json("Role name can not be admin")
+  } else if(role_name.trim().length > 32) {
+      res.status(422).json("Role name can not be longer than 32 chars")
+  }
   /*
     If the role_name in the body is valid, set req.role_name to be the trimmed string and proceed.
 
